@@ -28,7 +28,7 @@ type logger struct{}
 
 func (logger) Println(v ...interface{}) {}
 
-func BenchmarkAlexcesaro(b *testing.B) {
+func BenchmarkAlexcesaroS(b *testing.B) {
 	s := newServer()
 	c, err := ac.New(
 		ac.Address(s.Addr()),
@@ -48,6 +48,32 @@ func BenchmarkAlexcesaro(b *testing.B) {
 		c.Gauge(gaugeKey, gaugeValue)
 		c.Timing(timingKey, t)
 	}
+	c.Close()
+	s.Close()
+}
+
+func BenchmarkAlexcesaroP(b *testing.B) {
+	s := newServer()
+	c, err := ac.New(
+		ac.Address(s.Addr()),
+		ac.Prefix(prefixNoDot),
+		ac.FlushPeriod(flushPeriod),
+	)
+	if err != nil {
+		b.Fatal(err)
+	}
+
+	t := int(timingValue)/1000000
+
+	b.ResetTimer()
+
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			c.Increment(counterKey)
+			c.Gauge(gaugeKey, gaugeValue)
+			c.Timing(timingKey, t)
+		}
+	})
 	c.Close()
 	s.Close()
 }

@@ -4,8 +4,8 @@ Go clients listed on the
 
 ```
 $ go test -bench . -benchmem -benchtime=5s
-BenchmarkAlexcesaro-4    5000000     1277 ns/op      0 B/op     0 allocs/op
-BenchmarkCactus-4        2000000     3301 ns/op      4 B/op     0 allocs/op
-BenchmarkG2s-4            200000    38715 ns/op    624 B/op    26 allocs/op
-BenchmarkQuipo-4         2000000     4887 ns/op    496 B/op    10 allocs/op
+BenchmarkAlexcesaro-4	10000000	       580 ns/op	       0 B/op	       0 allocs/op
+BenchmarkCactus-4    	 5000000	      1970 ns/op	       4 B/op	       0 allocs/op
+BenchmarkG2s-4       	  500000	     15172 ns/op	     552 B/op	      23 allocs/op
+BenchmarkQuipo-4     	 3000000	      2405 ns/op	     384 B/op	       7 allocs/op
 ```

@@ -117,7 +117,7 @@ func newServer() *server {
 	}
 	s := &server{conn: conn, closed: make(chan bool)}
 	go func() {
-		buf := make([]byte, 512)
+		buf := make([]byte, 1500)
 		for {
 			_, err := conn.Read(buf)
 			if err != nil {

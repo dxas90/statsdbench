@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	addr        = ":0"
+	addr        = "127.0.0.1:0"
 	prefix      = "prefix."
 	prefixNoDot = "prefix"
 	counterKey  = "foo.bar.counter"

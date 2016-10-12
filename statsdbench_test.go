@@ -10,6 +10,8 @@ import (
 	"github.com/peterbourgon/g2s"
 	quipo "github.com/quipo/statsd"
 	ac "gopkg.in/alexcesaro/statsd.v2"
+	gone "github.com/One-com/gone/metric"
+	gones "github.com/One-com/gone/metric/sink/statsd"
 )
 
 const (
@@ -27,6 +29,66 @@ const (
 type logger struct{}
 
 func (logger) Println(v ...interface{}) {}
+
+func BenchmarkGoneS(b *testing.B) {
+	s := newServer()
+
+	sink, err := gones.New(
+		gones.Peer(s.Addr()),
+		gones.Prefix(prefixNoDot),
+		gones.Buffer(1432))
+	if err != nil {
+		b.Fatal(err)
+	}
+
+	flushPeriod := gone.FlushInterval(flushPeriod)
+	c := gone.NewClient(sink, flushPeriod)
+
+	gauge   := c.NewGauge(gaugeKey)
+	timer   := c.NewTimer(timingKey)
+	counter := c.NewCounter(counterKey)
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		counter.Inc(1)
+		gauge.Set(gaugeValue)
+		timer.Sample(timingValue)
+	}
+	c.Stop()
+	s.Close()
+}
+
+func BenchmarkGoneP(b *testing.B) {
+	s := newServer()
+
+	sink, err := gones.New(
+		gones.Peer(s.Addr()),
+		gones.Prefix(prefixNoDot),
+		gones.Buffer(1432))
+	if err != nil {
+		b.Fatal(err)
+	}
+	flushPeriod := gone.FlushInterval(flushPeriod)
+	c := gone.NewClient(sink, flushPeriod)
+
+	gauge   := c.NewGauge(gaugeKey)
+	timer   := c.NewTimer(timingKey)
+	counter := c.NewCounter(counterKey)
+
+	b.ResetTimer()
+
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			counter.Inc(1)
+			gauge.Set(gaugeValue)
+			timer.Sample(timingValue)
+		}
+	})
+
+	c.Stop()
+	s.Close()
+}
 
 func BenchmarkAlexcesaroS(b *testing.B) {
 	s := newServer()

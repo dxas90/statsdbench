@@ -39,12 +39,14 @@ func BenchmarkAlexcesaro(b *testing.B) {
 		b.Fatal(err)
 	}
 
+	t := int(timingValue)/1000000
+
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
 		c.Increment(counterKey)
 		c.Gauge(gaugeKey, gaugeValue)
-		c.Timing(timingKey, timingValue)
+		c.Timing(timingKey, t)
 	}
 	c.Close()
 	s.Close()

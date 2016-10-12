@@ -1,6 +1,4 @@
-Benchmark of my [StatsD client](https://github.com/alexcesaro/statsd) with the
-Go clients listed on the
-[StatsD wiki](https://github.com/etsy/statsd/wiki#client-implementations):
+Benchmark of Go statsd clients
 
 ```
 $ go test -bench . -benchmem -benchtime=5s

@@ -1,5 +1,7 @@
 Benchmark of Go statsd clients
 
+The comparison is not entirely fair. Some libraries do client side buffering. Some does aggregation of counter values. gone/metric does both.
+
 ```
 $ go test -bench . -benchmem -benchtime=5s
 BenchmarkGoneS-4      	50000000	       213 ns/op	       0 B/op	       0 allocs/op

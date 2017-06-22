@@ -44,9 +44,9 @@ func BenchmarkGoneS(b *testing.B) {
 	flushPeriod := gone.FlushInterval(flushPeriod)
 	c := gone.NewClient(sink, flushPeriod)
 
-	gauge   := c.NewGauge(gaugeKey)
-	timer   := c.NewTimer(timingKey)
-	counter := c.NewCounter(counterKey)
+	gauge   := c.RegisterGauge(gaugeKey)
+	timer   := c.RegisterTimer(timingKey)
+	counter := c.RegisterCounter(counterKey)
 
 	b.ResetTimer()
 
@@ -55,7 +55,9 @@ func BenchmarkGoneS(b *testing.B) {
 		gauge.Set(gaugeValue)
 		timer.Sample(timingValue)
 	}
+
 	c.Stop()
+	c.Flush()
 	s.Close()
 }
 
@@ -72,9 +74,9 @@ func BenchmarkGoneP(b *testing.B) {
 	flushPeriod := gone.FlushInterval(flushPeriod)
 	c := gone.NewClient(sink, flushPeriod)
 
-	gauge   := c.NewGauge(gaugeKey)
-	timer   := c.NewTimer(timingKey)
-	counter := c.NewCounter(counterKey)
+	gauge   := c.RegisterGauge(gaugeKey)
+	timer   := c.RegisterTimer(timingKey)
+	counter := c.RegisterCounter(counterKey)
 
 	b.ResetTimer()
 
@@ -87,6 +89,7 @@ func BenchmarkGoneP(b *testing.B) {
 	})
 
 	c.Stop()
+	c.Flush()
 	s.Close()
 }
 
